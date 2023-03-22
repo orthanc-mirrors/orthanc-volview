@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # SPDX-FileCopyrightText: 2023 Sebastien Jodogne, UCLouvain, Belgium
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -19,22 +17,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-set -ex
+FROM node:19.7.0-bullseye-slim
 
-if [ "$1" = "" ]; then
-    echo "Please provide a version number of VolView"
-    exit -1
-fi
+MAINTAINER Sebastien Jodogne <s.jodogne@gmail.com>
+LABEL Description="Orthanc, free DICOM server" Vendor="The Orthanc project"
 
-apt update
-apt install patch
-
-cd /tmp/
-tar xvf /source/VolView-$1.tar.gz
-
-cd /tmp/VolView-$1
-patch -p1 < /source/VolView-$1.patch
-npm install --cache /tmp/npm-cache
-npm run build --cache /tmp/npm-cache
-
-cp -r /tmp/VolView-$1/dist/* /target
+RUN apt-get -y clean && apt-get -y update && \
+    DEBIAN_FRONTEND=noninteractive apt-get -y install patch && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*

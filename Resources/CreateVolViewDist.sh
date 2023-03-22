@@ -39,7 +39,7 @@ if [ -t 1 ]; then
 fi
 
 ROOT_DIR=`dirname $(readlink -f $0)`/..
-IMAGE=node:19.7.0-bullseye-slim
+IMAGE=orthanc-volview-node
 
 echo "Creating the distribution of VolView $VERSION"
 
@@ -49,14 +49,18 @@ if [ -e "${ROOT_DIR}/VolView/dist/" ]; then
 fi
 
 if [ ! -f "${ROOT_DIR}/VolView/VolView-${VERSION}.tar.gz" ]; then
-    ( cd ${ROOT_DIR}/VolView && wget https://orthanc.uclouvain.be/third-party-downloads/VolView-${VERSION}.tar.gz )
+    ( cd ${ROOT_DIR}/VolView && \
+          wget https://orthanc.uclouvain.be/third-party-downloads/VolView-${VERSION}.tar.gz )
 fi
 
 mkdir -p ${ROOT_DIR}/VolView/dist/
 
+( cd ${ROOT_DIR}/Resources/CreateVolViewDist && \
+      docker build --no-cache -t ${IMAGE} . )
+
 docker run -t ${DOCKER_FLAGS} --rm \
        --user $(id -u):$(id -g) \
-       -v ${ROOT_DIR}/Resources/CreateVolViewDist-build.sh:/source/build.sh:ro \
+       -v ${ROOT_DIR}/Resources/CreateVolViewDist/build.sh:/source/build.sh:ro \
        -v ${ROOT_DIR}/VolView/VolView-${VERSION}.patch:/source/VolView-${VERSION}.patch:ro \
        -v ${ROOT_DIR}/VolView/VolView-${VERSION}.tar.gz:/source/VolView-${VERSION}.tar.gz:ro \
        -v ${ROOT_DIR}/VolView/dist/:/target:rw \
