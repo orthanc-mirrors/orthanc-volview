@@ -26,6 +26,9 @@ if [ "$1" = "" ]; then
     exit -1
 fi
 
+apt update
+apt install patch
+
 cd /tmp/
 tar xvf /source/VolView-$1.tar.gz
 
