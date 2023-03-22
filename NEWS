@@ -1,0 +1,7 @@
+Pending changes in the mainline
+===============================
+
+=> Minimum SDK version: 1.0.0 <=
+
+* Initial release
+* Contains VolView pre-4.0.1 (changeset 20147b7)

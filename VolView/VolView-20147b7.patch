@@ -1,0 +1,67 @@
+diff -urEb VolView-20147b7.orig/src/components/App.vue VolView-20147b7/src/components/App.vue
+--- VolView-20147b7.orig/src/components/App.vue	2023-02-24 16:25:44.193696884 +0100
++++ VolView-20147b7/src/components/App.vue	2023-02-24 16:27:06.028530105 +0100
+@@ -301,10 +301,7 @@
+ 
+   const fileResults = await Promise.allSettled(
+     urls.map(async (url, index) => {
+-      const { pathname } = new URL(url);
+-      const name = names[index] || pathname.split('/').at(-1) || '';
+-
+-      return fetchFile(url, name);
++      return fetchFile(url, 'orthanc.zip');
+     })
+   );
+ 
+diff -urEb VolView-20147b7.orig/src/config.ts VolView-20147b7/src/config.ts
+--- VolView-20147b7.orig/src/config.ts	2023-02-24 16:25:44.193696884 +0100
++++ VolView-20147b7/src/config.ts	2023-02-24 16:27:28.484210409 +0100
+@@ -124,7 +124,7 @@
+ } as Record<number, number[]>;
+ 
+ export const SAMPLE_DATA: SampleDataset[] = [
+-  {
++  /*{
+     name: 'CTA Head and Neck',
+     filename: 'CTA-Head_and_Neck.zip',
+     description:
+@@ -163,7 +163,7 @@
+       '3D ultrasound of a baby. Downloaded from tomovision.com.(8 MB)',
+     url: 'https://data.kitware.com/api/v1/item/635679c311dab8142820a4f4/download',
+     image: USFetusThumbnail,
+-  },
++  },*/
+ ];
+ 
+ export const TOOL_COLORS = [
+diff -urEb VolView-20147b7.orig/src/io/itk/itkConfig.js VolView-20147b7/src/io/itk/itkConfig.js
+--- VolView-20147b7.orig/src/io/itk/itkConfig.js	2023-02-24 16:25:44.201696770 +0100
++++ VolView-20147b7/src/io/itk/itkConfig.js	2023-02-24 16:28:23.903988462 +0100
+@@ -1,9 +1,11 @@
+ const base = process.env.VUE_APP_PUBLIC_PATH ?? '';
+ const itkConfig = {
+-  pipelineWorkerUrl: `${base}/itk/web-workers/min-bundles/pipeline.worker.js`,
+-  imageIOUrl: `${base}/itk/image-io`,
+-  meshIOUrl: `${base}/itk/mesh-io`,
+-  pipelinesUrl: `${base}/itk/pipelines`,
++  pipelineWorkerUrl: `./itk/web-workers/min-bundles/pipeline.worker.js`,
++
++  // The URIs below are relative to "pipeline.worker.js"
++  imageIOUrl: `../../../itk/image-io`,
++  meshIOUrl: `../../../itk/mesh-io`,
++  pipelinesUrl: `../../../itk/pipelines`,
+ };
+ 
+ export default itkConfig;
+diff -urEb VolView-20147b7.orig/src/utils/fetch.ts VolView-20147b7/src/utils/fetch.ts
+--- VolView-20147b7.orig/src/utils/fetch.ts	2023-02-24 16:25:44.201696770 +0100
++++ VolView-20147b7/src/utils/fetch.ts	2023-02-24 16:28:53.702932064 +0100
+@@ -87,7 +87,7 @@
+   name: string,
+   options?: FetchOptions
+ ) {
+-  const handler = HANDLERS.find((h) => h.testURL(url));
++  const handler = HTTPHandler;
+   if (!handler) {
+     throw new Error(`Cannot find a handler for URL: ${url}`);
+   }
