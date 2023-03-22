@@ -22,11 +22,9 @@
 
 import gzip
 import hashlib
+import io
 import os
 import sys
-
-if (sys.version_info < (3, 0)):
-    raise Exception('You must use Python 3.x to run this script')
 
 if len(sys.argv) != 3:
     raise Exception('Usage: %s [source folder] [target C++]' % sys.argv[0])
@@ -43,9 +41,17 @@ def EncodeFileAsCString(f, variable, content):
     
     column = 0
         
-    for i in content:
+    for c in content:
+        
+        if sys.version_info < (3, 0):
+            # Python 2.7
+            i = ord(c)
+        else:
+            # Python 3.x
+            i = c
+            
         if i < 32 or i >= 127 or i == ord('?'):
-            f.write('\\{0:03o}'.format(i))  # Octal formatting
+            f.write('\\{0:03o}'.format(i))
         elif i in [ ord('"'), ord('\\') ]:
             f.write('\\' + chr(i))
         else:
@@ -96,8 +102,17 @@ static void Uncompress(std::string& target, const void* data, size_t size, const
 
             with open(fullPath, 'rb') as source:
                 content = source.read()
-            
-            EncodeFileAsCString(g, variable, gzip.compress(content))
+
+            if sys.version_info < (3, 0):
+                # Python 2.7
+                fileobj = io.BytesIO()
+                gzip.GzipFile(fileobj=fileobj, mode='w').write(content)
+                compressed = fileobj.getvalue()
+            else:
+                # Python 3.x
+                compressed = gzip.compress(content)
+
+            EncodeFileAsCString(g, variable, compressed)
             WriteChecksum(g, variable + '_md5', content)
 
             index[relativePath] = variable
