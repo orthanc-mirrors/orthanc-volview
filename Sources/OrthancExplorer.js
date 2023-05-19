@@ -39,7 +39,7 @@ $('#series').live('pagebeforeshow', function() {
   b.insertAfter($('#series-info'));
   b.click(function() {
     if ($.mobile.pageData) {
-      window.open('../volview/index.html?urls=[../series/' + seriesId + '/archive]');
+      window.open('../volview/index.html?names=[archive.zip]&urls=[../series/' + seriesId + '/archive]');
     }
   });
 });
@@ -62,7 +62,7 @@ $('#study').live('pagebeforeshow', function() {
   b.insertAfter($('#study-info'));
   b.click(function() {
     if ($.mobile.pageData) {
-      window.open('../volview/index.html?urls=[../studies/' + studyId + '/archive]');
+      window.open('../volview/index.html?names=[archive.zip]&urls=[../studies/' + studyId + '/archive]');
     }
   });
 });

@@ -28,7 +28,7 @@
 set -ex
 
 if [ "$1" = "" ]; then
-    VERSION=20147b7
+    VERSION=4.1.1
 else
     VERSION=$1
 fi
