@@ -2,8 +2,8 @@
  * Orthanc - A Lightweight, RESTful DICOM Store
  * Copyright (C) 2012-2016 Sebastien Jodogne, Medical Physics
  * Department, University Hospital of Liege, Belgium
- * Copyright (C) 2017-2022 Osimis S.A., Belgium
- * Copyright (C) 2021-2022 Sebastien Jodogne, ICTEAM UCLouvain, Belgium
+ * Copyright (C) 2017-2023 Osimis S.A., Belgium
+ * Copyright (C) 2021-2023 Sebastien Jodogne, ICTEAM UCLouvain, Belgium
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -253,14 +253,15 @@ namespace OrthancPlugins
   // helper class to convert std::map of headers to the plugin SDK C structure
   class PluginHttpHeaders
   {
+  private:
     std::vector<const char*> headersKeys_;
     std::vector<const char*> headersValues_;
-  public:
 
-    PluginHttpHeaders(const std::map<std::string, std::string>& httpHeaders)
+  public:
+    explicit PluginHttpHeaders(const std::map<std::string, std::string>& httpHeaders)
     {
       for (std::map<std::string, std::string>::const_iterator
-           it = httpHeaders.begin(); it != httpHeaders.end(); it++)
+           it = httpHeaders.begin(); it != httpHeaders.end(); ++it)
       {
         headersKeys_.push_back(it->first.c_str());
         headersValues_.push_back(it->second.c_str());
