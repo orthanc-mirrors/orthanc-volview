@@ -37,9 +37,9 @@ void ReadStaticAsset(std::string& target,
 
 
 /**
- * As the VolView static assets are gzipped by the "EmbedResources.py"
- * script, we use a cache to maintain the uncompressed assets in order
- * to avoid multiple gzip decodings.
+ * As the VolView static assets are gzipped by the
+ * "EmbedStaticAssets.py" script, we use a cache to maintain the
+ * uncompressed assets in order to avoid multiple gzip decodings.
  **/
 class ResourcesCache : public boost::noncopyable
 {
