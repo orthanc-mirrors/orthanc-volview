@@ -1,6 +1,9 @@
 Pending changes in the mainline
 ===============================
 
+* Patch to make the build of static assets reproducible, following a
+  suggestion by Bernhard M. Wiedemann (bwiedemann@suse.de)
+
 
 Version 1.1 (2023-05-19)
 ========================

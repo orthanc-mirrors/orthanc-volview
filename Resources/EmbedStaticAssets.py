@@ -95,6 +95,9 @@ static void Uncompress(std::string& target, const void* data, size_t size, const
     count = 0
 
     for root, dirs, files in os.walk(SOURCE):
+        files.sort()
+        dirs.sort()
+
         for f in files:
             fullPath = os.path.join(root, f)
             relativePath = os.path.relpath(os.path.join(root, f), SOURCE)
@@ -106,11 +109,11 @@ static void Uncompress(std::string& target, const void* data, size_t size, const
             if sys.version_info < (3, 0):
                 # Python 2.7
                 fileobj = io.BytesIO()
-                gzip.GzipFile(fileobj=fileobj, mode='w').write(content)
+                gzip.GzipFile(fileobj=fileobj, mode='w', mtime=0).write(content)
                 compressed = fileobj.getvalue()
             else:
                 # Python 3.x
-                compressed = gzip.compress(content)
+                compressed = gzip.compress(content, mtime=0)
 
             EncodeFileAsCString(g, variable, compressed)
             WriteChecksum(g, variable + '_md5', content)
@@ -121,7 +124,7 @@ static void Uncompress(std::string& target, const void* data, size_t size, const
     
     g.write('void ReadStaticAsset(std::string& target, const std::string& path)\n')
     g.write('{\n')
-    for (path, variable) in index.items():
+    for (path, variable) in sorted(index.items()):
         g.write('  if (path == "%s")\n' % path)
         g.write('  {\n')
         g.write('    Uncompress(target, %s, sizeof(%s) - 1, %s_md5);\n' % (variable, variable, variable))
