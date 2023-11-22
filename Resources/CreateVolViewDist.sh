@@ -50,7 +50,7 @@ fi
 
 if [ ! -f "${ROOT_DIR}/VolView/VolView-${VERSION}.tar.gz" ]; then
     ( cd ${ROOT_DIR}/VolView && \
-          wget https://orthanc.uclouvain.be/third-party-downloads/VolView-${VERSION}.tar.gz )
+          wget https://orthanc.uclouvain.be/downloads/third-party-downloads/VolView-${VERSION}.tar.gz )
 fi
 
 mkdir -p ${ROOT_DIR}/VolView/dist/

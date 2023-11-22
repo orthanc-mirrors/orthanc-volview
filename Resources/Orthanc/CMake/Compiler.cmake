@@ -263,3 +263,24 @@ if (CMAKE_COMPILER_IS_GNUCXX)
   # preceding batches. https://cmake.org/Bug/view.php?id=14874
   set(CMAKE_CXX_ARCHIVE_APPEND "<CMAKE_AR> <LINK_FLAGS> q <TARGET> <OBJECTS>")
 endif()
+
+
+# This function defines macro "__ORTHANC_FILE__" as a replacement to
+# macro "__FILE__", as the latter leaks the full path of the source
+# files in the binaries
+# https://stackoverflow.com/questions/8487986/file-macro-shows-full-path
+# https://twitter.com/wget42/status/1676877802375634944?s=20
+function(DefineSourceBasenameForTarget targetname)
+  # Microsoft Visual Studio is extremely slow if using
+  # "set_property()", we only enable this feature for gcc and clang
+  if (CMAKE_COMPILER_IS_GNUCXX OR
+      CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    get_target_property(source_files "${targetname}" SOURCES)
+    foreach(sourcefile ${source_files})
+      get_filename_component(basename "${sourcefile}" NAME)
+      set_property(
+        SOURCE "${sourcefile}" APPEND
+        PROPERTY COMPILE_DEFINITIONS "__ORTHANC_FILE__=\"${basename}\"")
+    endforeach()
+  endif()
+endfunction()

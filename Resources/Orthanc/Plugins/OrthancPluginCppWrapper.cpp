@@ -79,6 +79,10 @@ namespace OrthancPlugins
     }
   }
 
+  void ResetGlobalContext()
+  {
+    globalContext_ = NULL;
+  }
 
   bool HasGlobalContext()
   {
@@ -1670,15 +1674,16 @@ namespace OrthancPlugins
       return true;
     }
 
-    // Parse the version
-    int aa, bb, cc;
-    if (
 #ifdef _MSC_VER
-      sscanf_s
+#define ORTHANC_SCANF sscanf_s
 #else
-      sscanf
+#define ORTHANC_SCANF sscanf
 #endif
-      (version, "%4d.%4d.%4d", &aa, &bb, &cc) != 3 ||
+
+    // Parse the version
+    int aa, bb, cc = 0;
+    if ((ORTHANC_SCANF(version, "%4d.%4d.%4d", &aa, &bb, &cc) != 3 &&
+         ORTHANC_SCANF(version, "%4d.%4d", &aa, &bb) != 2) ||
       aa < 0 ||
       bb < 0 ||
       cc < 0)
@@ -3737,6 +3742,27 @@ namespace OrthancPlugins
   {
     OrthancPluginDicomInstance* instance = OrthancPluginTranscodeDicomInstance(
       GetGlobalContext(), buffer, size, transferSyntax.c_str());
+
+    if (instance == NULL)
+    {
+      ORTHANC_PLUGINS_THROW_EXCEPTION(Plugin);
+    }
+    else
+    {
+      boost::movelib::unique_ptr<DicomInstance> result(new DicomInstance(instance));
+      result->toFree_ = true;
+      return result.release();
+    }
+  }
+#endif
+
+
+#if ORTHANC_PLUGINS_VERSION_IS_ABOVE(1, 12, 1)
+  DicomInstance* DicomInstance::Load(const std::string& instanceId,
+                                     OrthancPluginLoadDicomInstanceMode mode)
+  {
+    OrthancPluginDicomInstance* instance = OrthancPluginLoadDicomInstance(
+      GetGlobalContext(), instanceId.c_str(), mode);
 
     if (instance == NULL)
     {
