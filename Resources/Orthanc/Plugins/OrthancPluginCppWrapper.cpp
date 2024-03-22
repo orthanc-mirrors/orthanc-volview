@@ -2,8 +2,8 @@
  * Orthanc - A Lightweight, RESTful DICOM Store
  * Copyright (C) 2012-2016 Sebastien Jodogne, Medical Physics
  * Department, University Hospital of Liege, Belgium
- * Copyright (C) 2017-2023 Osimis S.A., Belgium
- * Copyright (C) 2021-2023 Sebastien Jodogne, ICTEAM UCLouvain, Belgium
+ * Copyright (C) 2017-2024 Osimis S.A., Belgium
+ * Copyright (C) 2021-2024 Sebastien Jodogne, ICTEAM UCLouvain, Belgium
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -2607,7 +2607,7 @@ namespace OrthancPlugins
 
     if (body.isMember(KEY_PRIORITY))
     {
-      if (body[KEY_PRIORITY].type() != Json::booleanValue)
+      if (body[KEY_PRIORITY].type() != Json::intValue)
       {
 #if HAS_ORTHANC_EXCEPTION == 1
         throw Orthanc::OrthancException(Orthanc::ErrorCode_BadFileFormat,
@@ -4025,5 +4025,49 @@ namespace OrthancPlugins
     {
       result[request->headersKeys[i]] = request->headersValues[i];
     }    
+  }
+
+#if !ORTHANC_PLUGINS_VERSION_IS_ABOVE(1, 12, 4)
+  static void SetPluginProperty(const std::string& pluginIdentifier,
+                                _OrthancPluginProperty property,
+                                const std::string& value)
+  {
+    _OrthancPluginSetPluginProperty params;
+    params.plugin = pluginIdentifier.c_str();
+    params.property = property;
+    params.value = value.c_str();
+
+    GetGlobalContext()->InvokeService(GetGlobalContext(), _OrthancPluginService_SetPluginProperty, &params);
+  }
+#endif
+
+  void SetRootUri(const std::string& pluginIdentifier,
+                  const std::string& uri)
+  {
+#if ORTHANC_PLUGINS_VERSION_IS_ABOVE(1, 12, 4)
+    OrthancPluginSetRootUri2(GetGlobalContext(), pluginIdentifier.c_str(), uri.c_str());
+#else
+    SetPluginProperty(pluginIdentifier, _OrthancPluginProperty_RootUri, uri);
+#endif
+  }
+
+  void SetDescription(const std::string& pluginIdentifier,
+                      const std::string& description)
+  {
+#if ORTHANC_PLUGINS_VERSION_IS_ABOVE(1, 12, 4)
+    OrthancPluginSetDescription2(GetGlobalContext(), pluginIdentifier.c_str(), description.c_str());
+#else
+    SetPluginProperty(pluginIdentifier, _OrthancPluginProperty_Description, description);
+#endif
+  }
+
+  void ExtendOrthancExplorer(const std::string& pluginIdentifier,
+                             const std::string& javascript)
+  {
+#if ORTHANC_PLUGINS_VERSION_IS_ABOVE(1, 12, 4)
+    OrthancPluginExtendOrthancExplorer2(GetGlobalContext(), pluginIdentifier.c_str(), javascript.c_str());
+#else
+    SetPluginProperty(pluginIdentifier, _OrthancPluginProperty_OrthancExplorer, javascript);
+#endif
   }
 }
