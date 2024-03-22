@@ -31,6 +31,9 @@
 
 #include <boost/thread/shared_mutex.hpp>
 
+#define ORTHANC_PLUGIN_NAME  "volview"
+
+
 // Forward declaration
 void ReadStaticAsset(std::string& target,
                      const std::string& path);
@@ -131,14 +134,14 @@ extern "C"
     Orthanc::Logging::Initialize(context);
 #endif
 
-    OrthancPluginSetDescription(context, "Kitware's VolView for Orthanc.");
+    OrthancPlugins::SetDescription(ORTHANC_PLUGIN_NAME, "Kitware's VolView for Orthanc.");
 
     OrthancPlugins::RegisterRestCallback<ServeFile>("/volview/(.*)", true);
 
     // Extend the default Orthanc Explorer with custom JavaScript for VolView
     std::string explorer;
     Orthanc::EmbeddedResources::GetFileResource(explorer, Orthanc::EmbeddedResources::ORTHANC_EXPLORER);
-    OrthancPluginExtendOrthancExplorer(OrthancPlugins::GetGlobalContext(), explorer.c_str());
+    OrthancPlugins::ExtendOrthancExplorer(ORTHANC_PLUGIN_NAME, explorer.c_str());
 
     return 0;
   }
@@ -151,7 +154,7 @@ extern "C"
 
   ORTHANC_PLUGINS_API const char* OrthancPluginGetName()
   {
-    return "volview";
+    return ORTHANC_PLUGIN_NAME;
   }
 
 
