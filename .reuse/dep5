@@ -3,7 +3,7 @@ Upstream-Name: orthanc-volview
 Upstream-Contact: Sebastien Jodogne <s.jodogne@gmail.com>
 Source: https://orthanc.uclouvain.be/
 
-Files: NEWS README
+Files: NEWS README CITATION.cff
 Copyright: 2023-2025 Sebastien Jodogne, ICTEAM UCLouvain, Belgium, and 1999-2025 Kitware, USA
 License: GPL-3.0-or-later
 
