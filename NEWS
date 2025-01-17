@@ -1,8 +1,12 @@
 Pending changes in the mainline
 ===============================
 
-* Upgrade to VolView tag 4.3.0 (commit a76e8fb).  Note that the VolView about 
-  box displays version 4.2.0.
+
+Version 1.2 (2025-01-17)
+========================
+
+* Upgrade to VolView tag 4.3.0 (commit a76e8fb).
+  Note that the VolView "About" box still displays version 4.2.0.
 * Patch to make the build of static assets reproducible, following a
   suggestion by Bernhard M. Wiedemann (bwiedemann@suse.de)
 
