@@ -1,6 +1,7 @@
 Pending changes in the mainline
 ===============================
 
+* Upgrade to VolView 4.3.0
 * Patch to make the build of static assets reproducible, following a
   suggestion by Bernhard M. Wiedemann (bwiedemann@suse.de)
 

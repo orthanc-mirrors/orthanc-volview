@@ -7,3 +7,4 @@ ThirdPartyDownloads/
 VolView/VolView-*.tar.gz
 VolView/dist
 i/
+.vscode/
