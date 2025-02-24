@@ -30,7 +30,7 @@ cd /tmp/
 tar xvf /source/VolView-$1.tar.gz
 
 cd /tmp/VolView-$1
-patch -p1 < /source/VolView-$1.patch
+# patch -p1 < /source/VolView-$1.patch
 npm install --cache /tmp/npm-cache
 npm run build --cache /tmp/npm-cache
 

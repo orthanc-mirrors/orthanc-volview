@@ -28,7 +28,8 @@
 set -ex
 
 if [ "$1" = "" ]; then
-    VERSION=4.3.0
+    #VERSION=4.3.0
+    VERSION=main-6df6e6e
 else
     VERSION=$1
 fi
@@ -61,7 +62,6 @@ mkdir -p ${ROOT_DIR}/VolView/dist/
 docker run -t ${DOCKER_FLAGS} --rm \
        --user $(id -u):$(id -g) \
        -v ${ROOT_DIR}/Resources/CreateVolViewDist/build.sh:/source/build.sh:ro \
-       -v ${ROOT_DIR}/VolView/VolView-${VERSION}.patch:/source/VolView-${VERSION}.patch:ro \
        -v ${ROOT_DIR}/VolView/VolView-${VERSION}.tar.gz:/source/VolView-${VERSION}.tar.gz:ro \
        -v ${ROOT_DIR}/VolView/dist/:/target:rw \
        ${IMAGE} \
