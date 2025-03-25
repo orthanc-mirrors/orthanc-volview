@@ -29,7 +29,7 @@ set -ex
 
 if [ "$1" = "" ]; then
     #VERSION=4.3.0
-    VERSION=main-6df6e6e
+    VERSION=main-971610f
 else
     VERSION=$1
 fi
