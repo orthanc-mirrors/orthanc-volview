@@ -1,8 +1,7 @@
 Pending changes in the mainline
 ===============================
 
-* Upgrade to VolView mainline (commit 971610f).
-  Note that the VolView "About" box shall now display version 4.3.0.
+* Upgrade to VolView 4.4.0
 
 
 Version 1.2 (2025-01-17)

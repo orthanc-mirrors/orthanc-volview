@@ -25,11 +25,11 @@
 # folder of VolView. It uses Docker to this end, in order to be usable
 # on our CIS.
 
-set -ex
+set -e
 
 if [ "$1" = "" ]; then
-    #VERSION=4.3.0
-    VERSION=main-971610f
+    VERSION=4.4.0
+    EXPECTED_MD5="88f6bef9a4ccb637d1db863b378462f1"
 else
     VERSION=$1
 fi
@@ -54,10 +54,16 @@ if [ ! -f "${ROOT_DIR}/VolView/VolView-${VERSION}.tar.gz" ]; then
           wget https://orthanc.uclouvain.be/downloads/third-party-downloads/VolView-${VERSION}.tar.gz )
 fi
 
+ACTUAL_MD5=`md5sum "${ROOT_DIR}/VolView/VolView-${VERSION}.tar.gz" | cut -d ' ' -f1`
+if [ "${EXPECTED_MD5}" != "" -a "${ACTUAL_MD5}" != "${EXPECTED_MD5}" ]; then
+    echo "Bad hash for file: ${ROOT_DIR}/VolView/VolView-${VERSION}.tar.gz"
+    exit -1
+fi
+
 mkdir -p ${ROOT_DIR}/VolView/dist/
 
 ( cd ${ROOT_DIR}/Resources/CreateVolViewDist && \
-      docker build --no-cache -t ${IMAGE} . )
+      docker build --network=host --no-cache -t ${IMAGE} . )
 
 docker run -t ${DOCKER_FLAGS} --rm \
        --user $(id -u):$(id -g) \
