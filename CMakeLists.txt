@@ -22,7 +22,7 @@
 cmake_minimum_required(VERSION 2.8...4.0)
 project(OrthancVolView)
 
-set(ORTHANC_VOLVIEW_VERSION "mainline")
+set(ORTHANC_VOLVIEW_VERSION "1.3")
 
 if (ORTHANC_VOLVIEW_VERSION STREQUAL "mainline")
   set(ORTHANC_FRAMEWORK_DEFAULT_VERSION "mainline")
