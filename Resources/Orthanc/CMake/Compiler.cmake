@@ -22,6 +22,16 @@
 
 # This file sets all the compiler-related flags
 
+if (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+  # Since Orthanc 1.12.7 that allows CMake 4.0, builds for macOS
+  # require the C++ standard to be explicitly set to C++11. Do *not*
+  # do this on GNU/Linux, as third-party system libraries could have
+  # been compiled with higher versions of the C++ standard.
+  set(CMAKE_CXX_STANDARD 11)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+  set(CMAKE_CXX_EXTENSIONS OFF)
+endif()
+
 
 # Save the current compiler flags to the cache every time cmake configures the project
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}" CACHE STRING "compiler flags" FORCE)
@@ -239,7 +249,9 @@ elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
   add_definitions(
     -D_XOPEN_SOURCE=1
     )
-  link_libraries(iconv)
+  
+  # Linking with iconv breaks the Universal builds on modern compilers
+  # link_libraries(iconv)
 
 elseif (CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
   message("Building using Emscripten (for WebAssembly or asm.js targets)")
